@@ -958,6 +958,36 @@ Contact.prototype.displayName = function()
 	return this.givenName + " " + this.familyName;
 }
 
+
+Contacts.prototype.newContact = function (contact,successCallback) {
+    // Criteria object for adding contacts
+    var criteria = new Object();
+    criteria.Type = 'Contact';
+    criteria.Data = new Object();
+ 
+ 
+    criteria.Data.FirstName = new Object();
+    criteria.Data.FirstName.Value = contact['firstName'];
+    
+    criteria.Data.LastName = new Object();
+    criteria.Data.LastName.Value = contact['lastName'];
+  
+ 
+        criteria.Data.MobilePhoneGen = new Object();
+        criteria.Data.MobilePhoneGen.Value = contact['phoneNumber'];
+  
+ 
+    var result = 0;
+    try {
+	this.contactsService = device.getServiceObject("Service.Contact", "IDataSource");
+        result = this.contactsService.IDataSource.Add(criteria);
+    } catch(err) {
+        alert( "error saving data" +err );
+        return;
+    }
+    successCallback(result.ErrorCode);
+}
+
 /*
  * @param {ContactsFilter} filter Object with filter properties. filter.name only for now.
  * @param {function} successCallback Callback function on success
